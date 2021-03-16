@@ -1,122 +1,188 @@
-from tkinter import Tk,Label,Place,Button,Entry,CENTER,Scrollbar,END
-from tkinter import ttk
+import minizinc as mz
+import LoadData as ld
 
-raiz=Tk()
-raiz.title("Implementacion")
 
-Label(raiz,text="Ingrese Numero de Filas",font=('Arial',12),fg="blue").place(x=30,y=30)
-
-entra_numeroFilas=Entry(raiz)
-entra_numeroFilas.place(x=30,y=80)
-
-Label(raiz,text="Ingrese Datos",font=("Arial",12),fg="blue").place(x=30,y=120)
-
-Label(raiz,text="Region").place(x=40,y=190)
-entra_region=Entry(raiz)
-entra_region.focus()
-entra_region.place(x=40,y=170)
-
-Label(raiz,text="Poblacion").place(x=200,y=190)
-entra_poblacion=Entry(raiz)
-entra_poblacion.place(x=200,y=170)
-
-Label(raiz,text="Congeladores Disponibles").place(x=360,y=190) 
-entra_congeladora=Entry(raiz)
-entra_congeladora.place(x=360,y=170)
-
-Label(raiz,text="Unidades de Vacunas").place(x=40,y=250)
-entra_vacunas=Entry(raiz)
-entra_vacunas.place(x=40,y=230)
-
-Label(raiz,text="Costo Adecuacion").place(x=200,y=250)
-entra_costo=Entry(raiz)
-entra_costo.place(x=200,y=230)
-
-Label(raiz,text="Muertes").place(x=360,y=250)
-entra_muertes=Entry(raiz)
-entra_muertes.place(x=360,y=230)
-
-####################BOTON AGREGAR#################
-
-btn_agregar=Button(raiz,text="AGREGAR",width=17,command=lambda:agregar())
-btn_agregar.place(x=40,y=300)
-
-####################TABLA RESULTADOS ############
-
-Label(raiz,text="RESULTADOS",font=("Arial",12)).place(x=40,y=350)
-
-tabla_resultados=ttk.Treeview(raiz,columns=[f"#{n}" for n in range(0,2)])
-tabla_resultados.place(x=40,y=380)
-
-tabla_resultados.column("#0",width=0,minwidth=1)
-tabla_resultados.column("#1",width=150,minwidth=100,anchor=CENTER)
-tabla_resultados.column("#2",width=150,minwidth=100,anchor=CENTER)
-
-tabla_resultados.heading("#0",text="")
-tabla_resultados.heading("#1",text="REGION")
-tabla_resultados.heading("#2",text="NUMEROS DE VACUNAS")
-
-######################### TABLA MUESTRA DATOS INGRESADOS ####################
-
-Label(raiz,text="DATOS INGRESADOS",font=("Arial",14),fg="blue").place(x=700,y=100)
-
-tabla_datos=ttk.Treeview(raiz,columns=[f"#{n}" for n in range(0,6)])
-tabla_datos.place(x=600,y=170)
-
-tabla_datos.column("#0",width=0,minwidth=1)
-tabla_datos.column("#1",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#2",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#3",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#4",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#5",width=100,minwidth=100,anchor=CENTER)
-tabla_datos.column("#6",width=250,minwidth=140,anchor=CENTER)
-
-tabla_datos.heading("#0", text="")
-tabla_datos.heading("#1", text="Region")
-tabla_datos.heading("#2", text="Poblacion")
-tabla_datos.heading("#3", text="Congeladores")
-tabla_datos.heading("#4", text="Unidad Vacunas")
-tabla_datos.heading("#5", text="Costos")
-tabla_datos.heading("#6", text="Muertes")
-
-################SCROLLBAR###################
-scroll_Tabladatos=ttk.Scrollbar(raiz,orient="vertical",command=tabla_datos.yview)
-scroll_Tabladatos.place(x=1232,y=170,height=225)
-tabla_datos.configure(yscrollcommand=scroll_Tabladatos.set)
-
-#################BOTONES CALCULAR EDITAR ELIMINAR##############
-
-btn_calcular=Button(raiz,text="CALCULAR",width=17)
-btn_calcular.place(x=650,y=430)
-
-btn_calcular=Button(raiz,text="EDITAR",width=17)
-btn_calcular.place(x=800,y=430)
-
-btn_calcular=Button(raiz,text="ELIMINAR",width=17)
-btn_calcular.place(x=950,y=430)
-
-###############BOTON AGREGAR ##############
-def agregar():
-    x=[(entra_region.get().upper()),(entra_poblacion.get()),(entra_congeladora.get()),(entra_vacunas.get()),(entra_costo.get()),(entra_muertes.get())]
+class MinizincMy:
     
-    tabla_datos.insert("",0,values=x)
+    def __init__(self, listaDeRegiones, numCongeladores, presupuesto, kits, listaNombreRegionCA,  listaCualificacionCA, valorDeCondiconesA):
         
-    entra_congeladora.delete(0,END)
-    entra_costo.delete(0,END)
-    entra_muertes.delete(0,END)
-    entra_region.delete(0,END)
-    entra_poblacion.delete(0,END)
-    entra_vacunas.delete(0,END)
+        self.listaDeRegiones = listaDeRegiones
+        self.stringFinal = ""
+        self.stringResultado = "Resultados: \n"
+        self.numCongeladores =  int(numCongeladores)
+        self.presupuesto = int(presupuesto)
+        self.kits =  int(kits)
+        
+        # para condiciones adicionales (CA)
+        self.listaNombreRegionCA = listaNombreRegionCA
+        self.listaCualificacionCA =  listaCualificacionCA
+        
+        if (valorDeCondiconesA  == ""):
+            self.valorDeCondiconesA = ""
+        else:
+            self.valorDeCondiconesA = int(valorDeCondiconesA)
     
 
-################BOTON SALIR####################
+    def crearVarRegiones(self):
+        stringX = "\nvar int: Beneficio;\n"
+        base = "var int: "
+        for regionX in self.listaDeRegiones:
+            stringX = stringX + base + regionX.get_nombreCorto()+ ";\n"
 
-btn_calcular=Button(raiz,text="SALIR",width=17,command=lambda:salir())
-btn_calcular.place(x=1100,y=430)
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        # print(stringX)
 
-def salir():
-    raiz.destroy()
+    def muertesPorMillon(self):
+        listaDeRegiones = sorted(self.listaDeRegiones, key = lambda region: region.get_MuertePorMillon())
 
+        stringX = "constraint "
+        stringCola = "<= " + str(self.numCongeladores) + ";"
+        for i in range(len(listaDeRegiones)):
+            if (i == 0 or i == 1):
+                stringX =  stringX + "2*"+ listaDeRegiones[i].get_nombreCorto() + " "
+            else:
+                stringX =  stringX + listaDeRegiones[i].get_nombreCorto() + " "
 
-raiz.state(newstate="zoomed")
-raiz.mainloop()
+            if (i != (len(listaDeRegiones)-1)):
+                stringX = stringX + "+ "
+
+        stringX = stringX + stringCola
+
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        # print(stringX)
+
+    def kitsPorUnidad(self):
+        stringX = "constraint "
+        stringCola = "<= " + str(self.kits) + ";"
+        
+        for i in range(len(self.listaDeRegiones)):
+            stringX =  stringX + str(self.listaDeRegiones[i].get_kitsReque())+ "*" + self.listaDeRegiones[i].get_nombreCorto()  + " "
+
+            if (i != (len(self.listaDeRegiones)-1)):
+                stringX = stringX + "+ "
+
+        stringX = stringX + stringCola
+
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        # print (stringX)
+
+    def costos(self):
+        divisor = 100000
+        stringX = "constraint "
+        stringCola = "<= " + str(self.presupuesto/divisor) + ";"
+        
+        for i in range(len(self.listaDeRegiones)):
+            stringX =  stringX + str(self.listaDeRegiones[i].get_costos()/divisor)+ "*" + self.listaDeRegiones[i].get_nombreCorto()  + " "
+
+            if (i != (len(self.listaDeRegiones)-1)):
+                stringX = stringX + "+ "
+
+        stringX = stringX + stringCola
+
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        # print (stringX)
+
+    def condicionesAdicionales(self):
+        stringX = "constraint "
+        stringCola = ">= " + str(self.valorDeCondiconesA) + ";\n"
+        
+        for i in range(len(self.listaNombreRegionCA)):            
+            stringX =  stringX + str(self.listaCualificacionCA[i]) + "*" + self.listaNombreRegionCA[i]  + " "
+            
+            if (i != (len(self.listaNombreRegionCA)-1)):
+                stringX = stringX + "+ "
+                
+        stringX = stringX + stringCola
+            
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        # print(stringX)
+        
+    def secuenciaMayorOIgual(self):
+        stringX = "\n"
+        base = "constraint "
+        
+        listaDeRegiones = sorted(self.listaDeRegiones, key = lambda region: region.get_EscalaValoracion(), reverse=True)
+        
+        for i in range(len(listaDeRegiones)-1):
+            operador = ""
+            if (self.listaDeRegiones[i].get_EscalaValoracion() > self.listaDeRegiones[i+1].get_EscalaValoracion()):
+                operador = " > "
+            else:
+                operador = " = "
+        
+            stringX = stringX + base + self.listaDeRegiones[i].get_nombreCorto() + operador + self.listaDeRegiones[i+1].get_nombreCorto() + ";\n" 
+        
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        # print(stringX)
+        
+    def noNegatividad(self):
+        stringX = "constraint Beneficio >= 0;\n"
+        base = "constraint "
+        base2 = " >= 0;\n"
+        
+        for regionX in self.listaDeRegiones:        
+            stringX = stringX + base + regionX.get_nombreCorto() + base2
+        
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        # print(stringX)
+        
+    def funcionObjetivo(self):
+        stringX = "constraint Beneficio = "
+        stringCola = ";\nsolve maximize Beneficio;\n"
+        
+        for i in range(len(self.listaDeRegiones)):
+            stringX = stringX + str(self.listaDeRegiones[i].get_EscalaValoracion()) + "*" + self.listaDeRegiones[i].get_nombreCorto()
+            
+            if (i != (len(self.listaDeRegiones)-1)):
+                stringX = stringX + " + "
+        
+        stringX = stringX + stringCola
+        
+        self.stringFinal = self.stringFinal + stringX + "\n"
+        print(self.stringFinal)
+
+    def calcular(self, siCondicionesA):
+        self.crearVarRegiones()
+        self.muertesPorMillon()
+        self.kitsPorUnidad()
+        self.costos()
+        
+        if(siCondicionesA):
+            self.condicionesAdicionales() 
+        
+        self.secuenciaMayorOIgual()
+        self.noNegatividad()
+        self.funcionObjetivo()
+        
+        # desde aca se resilve el codigo en minizinc, en alguna parte desde aca iria la funcion de parar en X minutos        
+        
+        # Create a MiniZinc model
+        model = mz.Model()
+        model.add_string(self.stringFinal)
+
+        # Transform Model into a instance
+        gecode = mz.Solver.lookup("gecode")
+        inst = mz.Instance(gecode, model)
+
+        # Solve the instance
+        result = inst.solve()
+        
+        print("*************************   RESULTADOS MINIZINC   *************************")
+        
+        for regionX in self.listaDeRegiones:
+            nombreRegionX = str(regionX.get_nombreCorto()) + " = "
+            resultadoX = result[str(regionX.get_nombreCorto())]
+            
+            print(nombreRegionX, end = "")
+            print(resultadoX)
+            
+            self.stringResultado = self.stringResultado + nombreRegionX + str(resultadoX) + "\n"
+
+        self.stringResultado = self.stringResultado + "Beneficio = " + str(result["Beneficio"]) + "\n"
+        
+        print("Beneficio", end = " = ")
+        print(result["Beneficio"])
+        print("\n*************************   FIN DE PROGRAMA   *************************")
+
+    def getResultado(self):
+        return self.stringResultado
