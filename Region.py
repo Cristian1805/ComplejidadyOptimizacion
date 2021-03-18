@@ -9,7 +9,7 @@ class Region:
         self.unidadesReque = unidadesReque
         self.costos = costos*1000000
         self.muertes = muertes
-        self.proporcion = "{:.6f}".format(self.CongeladoresActuales / self.congeladores)
+        self.proporcion = "{:.6f}".format(self.congeladores / self.CongeladoresActuales)
         self.escalaValoracion = ""
         #self.muertePorMillon  =  self.poblacion/self.muertes
         
