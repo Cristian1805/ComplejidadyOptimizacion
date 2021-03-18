@@ -44,6 +44,9 @@ class DataLoad:
     
     def getRegiones(self):
         titlesX = True
+        valorunidad=self.congeladorestotal()
+        print("Valor: %i " % valorunidad)
+
         for row in self.hoja.rows:
             if (titlesX):
                 for item in row:
@@ -51,16 +54,36 @@ class DataLoad:
                 titlesX = False
                 # print(self.titulos)
             else:
-                regionX = rg.Region(self.editarNombre(row[0].value), row[0].value, row[1].value, row[2].value, row[3].value, row[4].value, row[5].value)
+                regionX = rg.Region(self.editarNombre(row[0].value), row[0].value, row[2].value , self.congeladorestotal(), row[3].value, row[4].value, row[5].value)
                 self.listaRegiones.append(regionX)
-                print(self.listaRegiones)
-                
+                print(self.listaRegiones )
+
         self.titulos.append("Proporcion\n(Estaciones/Poblacion)")
         self.titulos.append("Escala de valoración\ndel beneficio")
         
         self.calcularEscalaValoracion()
         
         return self.listaRegiones
+
+        
+
+    def congeladorestotal(self):         
+        titlesX = True
+        conteo = 0
+        for row in self.hoja.rows: 
+            if (titlesX):
+                titlesX = False
+                # print(self.titulos)
+            else:
+            #print ("unidad = %i" % unidad)
+                valor=(row[2].value)
+                print("CONGELADORES")
+                
+                print (type(int(row[2].value)))
+                conteo=conteo + valor 
+                print("Conteo: %i" % conteo)
+
+        return conteo
     
     def editarNombre(self, nombreX):        
         textoAux = nombreX
@@ -77,10 +100,6 @@ class DataLoad:
         textoAux = textoAux.replace("    ", " ")
         textoAux = textoAux.replace("   ", " ")
         textoAux = textoAux.replace("  ", " ")
-
-        # solo borra espacion y pone uppercase 
-        # textoAux = textoAux.replace(" ", "")
-        # textoAux = textoAux.upper()
 
         # comentar desde aca si solo se dejara nombre con uppercase
         textoAux = textoAux.split(" ")

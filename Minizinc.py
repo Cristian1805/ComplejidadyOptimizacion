@@ -1,5 +1,5 @@
-import minizinc as mz
-import LoadData as ld
+import Minizinc as mz
+import DataLoad as ld
 
 
 class MinizincMy:
