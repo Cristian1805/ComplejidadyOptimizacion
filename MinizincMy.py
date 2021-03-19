@@ -37,7 +37,8 @@ class MinizincMy:
         stringX = "constraint "
         stringCola = "<= " + str(self.kits) + ";"
         for i in range(len(self.listaDeRegiones)):
-            if (self.listaDeRegiones[i].get_nombreCorto == "NE" or self.listaDeRegiones[i].get_nombreCorto == "S"):
+
+            if (self.listaDeRegiones[i].get_nombreCorto() == "NE" or self.listaDeRegiones[i].get_nombreCorto() == "S"):
                 stringX =  stringX + "2*"+ self.listaDeRegiones[i].get_nombreCorto() + " "
             else:
                 stringX =  stringX + self.listaDeRegiones[i].get_nombreCorto() + " "
@@ -67,7 +68,7 @@ class MinizincMy:
         # print (stringX)
 
     def costosAdecuacion(self):
-        divisor = 1000000
+        divisor = 100000
         divisor2 = "50000"
         stringX = "constraint "
         stringCola = "<= " + str(self.presupuesto/divisor) + ";"
@@ -98,33 +99,14 @@ class MinizincMy:
         self.stringFinal = self.stringFinal + stringX + "\n"
         # print(stringX)
         
-    """ def secuenciaMayorOIgual(self):
-        stringX = "\n"
-        base = "constraint "
-        
-        listaDeRegiones = sorted(self.listaDeRegiones, key = lambda region: region.get_EscalaValoracion(), reverse=True)
-        
-        for i in range(len(listaDeRegiones)-1):
-            operador = ""
-            if (self.listaDeRegiones[i].get_EscalaValoracion() > self.listaDeRegiones[i+1].get_EscalaValoracion()):
-                operador = " > "
-            else:
-                operador = " = "
-        
-            stringX = stringX + base + self.listaDeRegiones[i].get_nombreCorto() + operador + self.listaDeRegiones[i+1].get_nombreCorto() + ";\n" 
-        
-        self.stringFinal = self.stringFinal + stringX + "\n" """
-        # print(stringX)
-        
     def poblacion(self):
-        stringX = "constraint "
-        base = " >= "
+        stringX = "constraint Beneficio >= 0;\n"
+        base = "constraint "
+        base2 = " <= "
         
         for i in range(len(self.listaDeRegiones)):
-            stringX = stringX + str(self.listaDeRegiones[i].get_EscalaValoracion()) + "*" + self.listaDeRegiones[i].get_nombreCorto() + base + str(self.listaDeRegiones[i].get_poblacion) + ";\n"
-            
-            if (i != (len(self.listaDeRegiones)-1)):
-                stringX = stringX + " + "
+            stringX = stringX + base + str(self.listaDeRegiones[i].get_EscalaValoracion()) + "*" + self.listaDeRegiones[i].get_nombreCorto() + base2 + str(self.listaDeRegiones[i].get_poblacion()) + ";\n"
+               
 
        
         self.stringFinal = self.stringFinal + stringX + "\n"
@@ -186,6 +168,7 @@ class MinizincMy:
         for regionX in self.listaDeRegiones:
             nombreRegionX = str(regionX.get_nombreCorto()) + " = "
             resultadoX = result[str(regionX.get_nombreCorto())]
+            print(resultadoX)
             
             print(nombreRegionX, end = "")
             print(resultadoX)

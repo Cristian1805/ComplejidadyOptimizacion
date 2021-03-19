@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(row, 0,  item)
                 
-                item = QtWidgets.QTableWidgetItem(str(regionX.get_congeladores()))
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_poblacion()))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(row, 1,  item)
                 

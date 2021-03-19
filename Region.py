@@ -4,11 +4,11 @@ class Region:
         
         self.nombreCorto = nombreCorto
         self.nombre = nombre
-        self.poblacion = (poblacion*100000)
+        self.poblacion = (poblacion*10000)
         self.congeladores = congeladores
         self.CongeladoresActuales = CongeladoresActuales
         self.unidadesReque = unidadesReque
-        self.costos = costos*1000000
+        self.costos = costos*100000
         self.muertes = muertes
         self.proporcion = "{:.6f}".format(self.congeladores / self.CongeladoresActuales)
         self.escalaValoracion = ""
