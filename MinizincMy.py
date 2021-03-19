@@ -1,15 +1,15 @@
-import Minizinc as mz
+import minizinc as mz
 import DataLoad as ld
 
 
 class MinizincMy:
     
-    def __init__(self, listaDeRegiones, numCongeladores, presupuesto, kits, listaNombreRegionCA,  listaCualificacionCA, valorDeCondiconesA):
+    def __init__(self, listaDeRegiones, numUnidades, presupuesto, kits, listaNombreRegionCA,  listaCualificacionCA, valorDeCondiconesA):
         
         self.listaDeRegiones = listaDeRegiones
         self.stringFinal = ""
         self.stringResultado = "Resultados: \n"
-        self.numCongeladores =  int(numCongeladores)
+        self.numUnidades =  int(numUnidades)
         self.presupuesto = int(presupuesto)
         self.kits =  int(kits)
         
@@ -32,18 +32,18 @@ class MinizincMy:
         self.stringFinal = self.stringFinal + stringX + "\n"
         # print(stringX)
 
-    def muertesPorMillon(self):
-        listaDeRegiones = sorted(self.listaDeRegiones, key = lambda region: region.get_MuertePorMillon())
+    def kitsPorUnidad(self):    
 
         stringX = "constraint "
-        stringCola = "<= " + str(self.numCongeladores) + ";"
-        for i in range(len(listaDeRegiones)):
-            if (i == 0 or i == 1):
-                stringX =  stringX + "2*"+ listaDeRegiones[i].get_nombreCorto() + " "
-            else:
-                stringX =  stringX + listaDeRegiones[i].get_nombreCorto() + " "
+        stringCola = "<= " + str(self.kits) + ";"
+        for i in range(len(self.listaDeRegiones)):
 
-            if (i != (len(listaDeRegiones)-1)):
+            if (self.listaDeRegiones[i].get_nombreCorto() == "NE" or self.listaDeRegiones[i].get_nombreCorto() == "S"):
+                stringX =  stringX + "2*"+ self.listaDeRegiones[i].get_nombreCorto() + " "
+            else:
+                stringX =  stringX + self.listaDeRegiones[i].get_nombreCorto() + " "
+
+            if (i != (len(self.listaDeRegiones)-1)):
                 stringX = stringX + "+ "
 
         stringX = stringX + stringCola
@@ -51,12 +51,13 @@ class MinizincMy:
         self.stringFinal = self.stringFinal + stringX + "\n"
         # print(stringX)
 
-    def kitsPorUnidad(self):
+    def Unidades(self):
+        divisor= "10000"
         stringX = "constraint "
-        stringCola = "<= " + str(self.kits) + ";"
+        stringCola = "<= " + str(self.numUnidades) + ";"
         
         for i in range(len(self.listaDeRegiones)):
-            stringX =  stringX + str(self.listaDeRegiones[i].get_kitsReque())+ "*" + self.listaDeRegiones[i].get_nombreCorto()  + " "
+            stringX =  stringX + str(self.listaDeRegiones[i].get_unidadesReque())+ "*" + self.listaDeRegiones[i].get_nombreCorto() + "/" + divisor + " "
 
             if (i != (len(self.listaDeRegiones)-1)):
                 stringX = stringX + "+ "
@@ -66,13 +67,14 @@ class MinizincMy:
         self.stringFinal = self.stringFinal + stringX + "\n"
         # print (stringX)
 
-    def costos(self):
+    def costosAdecuacion(self):
         divisor = 100000
+        divisor2 = "50000"
         stringX = "constraint "
         stringCola = "<= " + str(self.presupuesto/divisor) + ";"
         
         for i in range(len(self.listaDeRegiones)):
-            stringX =  stringX + str(self.listaDeRegiones[i].get_costos()/divisor)+ "*" + self.listaDeRegiones[i].get_nombreCorto()  + " "
+            stringX =  stringX + str(self.listaDeRegiones[i].get_costos()/divisor)+ "*" + self.listaDeRegiones[i].get_nombreCorto() + "/" + divisor2 + " "
 
             if (i != (len(self.listaDeRegiones)-1)):
                 stringX = stringX + "+ "
@@ -97,23 +99,17 @@ class MinizincMy:
         self.stringFinal = self.stringFinal + stringX + "\n"
         # print(stringX)
         
-    def secuenciaMayorOIgual(self):
-        stringX = "\n"
+    def poblacion(self):
+        stringX = "constraint Beneficio >= 0;\n"
         base = "constraint "
+        base2 = " <= "
         
-        listaDeRegiones = sorted(self.listaDeRegiones, key = lambda region: region.get_EscalaValoracion(), reverse=True)
-        
-        for i in range(len(listaDeRegiones)-1):
-            operador = ""
-            if (self.listaDeRegiones[i].get_EscalaValoracion() > self.listaDeRegiones[i+1].get_EscalaValoracion()):
-                operador = " > "
-            else:
-                operador = " = "
-        
-            stringX = stringX + base + self.listaDeRegiones[i].get_nombreCorto() + operador + self.listaDeRegiones[i+1].get_nombreCorto() + ";\n" 
-        
+        for i in range(len(self.listaDeRegiones)):
+            stringX = stringX + base + str(self.listaDeRegiones[i].get_EscalaValoracion()) + "*" + self.listaDeRegiones[i].get_nombreCorto() + base2 + str(self.listaDeRegiones[i].get_poblacion()) + ";\n"
+               
+
+       
         self.stringFinal = self.stringFinal + stringX + "\n"
-        # print(stringX)
         
     def noNegatividad(self):
         stringX = "constraint Beneficio >= 0;\n"
@@ -143,14 +139,14 @@ class MinizincMy:
 
     def calcular(self, siCondicionesA):
         self.crearVarRegiones()
-        self.muertesPorMillon()
         self.kitsPorUnidad()
-        self.costos()
+        self.Unidades()
+        self.costosAdecuacion()
         
         if(siCondicionesA):
             self.condicionesAdicionales() 
         
-        self.secuenciaMayorOIgual()
+        self.poblacion()
         self.noNegatividad()
         self.funcionObjetivo()
         
@@ -172,6 +168,7 @@ class MinizincMy:
         for regionX in self.listaDeRegiones:
             nombreRegionX = str(regionX.get_nombreCorto()) + " = "
             resultadoX = result[str(regionX.get_nombreCorto())]
+            print(resultadoX)
             
             print(nombreRegionX, end = "")
             print(resultadoX)

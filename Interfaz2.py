@@ -10,7 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 import DataLoad as ld
 import Region as rg
-import Minizinc as mz
+import MinizincMy as mz
 
 
 class Ui_MainWindow(object):
@@ -170,11 +170,11 @@ class Ui_MainWindow(object):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(row, 0,  item)
                 
-                item = QtWidgets.QTableWidgetItem(str(regionX.get_congeladores()))
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_poblacion()))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(row, 1,  item)
                 
-                item = QtWidgets.QTableWidgetItem(str(regionX.get_CongeladoresActuales()))
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_congeladores()))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 self.tableWidget.setItem(row, 2,  item)
                 
@@ -250,7 +250,7 @@ class Ui_MainWindow(object):
             cualificacionX = self.lineEditCualificacion.text()  
                       
             self.label_5.setText("Calculando...")
-            minizinc = mz.Minizinc(self.listaDeRegiones, kitsX, presupuestoX, unidadesX, self.listaNombreRegionCA, self.listaCualificacionCA, cualificacionX)
+            minizinc = mz.MinizincMy(self.listaDeRegiones,unidadesX, presupuestoX,kitsX, self.listaNombreRegionCA, self.listaCualificacionCA, cualificacionX)
             minizinc.calcular(self.siCondicionesA)
             resultadoFinal = minizinc.getResultado()
             self.verDialogo(resultadoFinal)
