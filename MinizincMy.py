@@ -1,4 +1,4 @@
-import Minizinc as mz
+import minizinc as mz
 import DataLoad as ld
 
 
@@ -32,18 +32,17 @@ class MinizincMy:
         self.stringFinal = self.stringFinal + stringX + "\n"
         # print(stringX)
 
-    def kitsPorUnidad(self):
-        listaDeRegiones = sorted(self.listaDeRegiones, key = lambda region: region.get_MuertePorMillon())
+    def kitsPorUnidad(self):    
 
         stringX = "constraint "
         stringCola = "<= " + str(self.kits) + ";"
-        for i in range(len(listaDeRegiones)):
-            if (i == 0 or i == 1):
-                stringX =  stringX + "2*"+ listaDeRegiones[i].get_nombreCorto() + " "
+        for i in range(len(self.listaDeRegiones)):
+            if (self.listaDeRegiones[i].get_nombreCorto == "NE" or self.listaDeRegiones[i].get_nombreCorto == "S"):
+                stringX =  stringX + "2*"+ self.listaDeRegiones[i].get_nombreCorto() + " "
             else:
-                stringX =  stringX + listaDeRegiones[i].get_nombreCorto() + " "
+                stringX =  stringX + self.listaDeRegiones[i].get_nombreCorto() + " "
 
-            if (i != (len(listaDeRegiones)-1)):
+            if (i != (len(self.listaDeRegiones)-1)):
                 stringX = stringX + "+ "
 
         stringX = stringX + stringCola
@@ -52,12 +51,12 @@ class MinizincMy:
         # print(stringX)
 
     def Unidades(self):
-        divisor= 10000
+        divisor= "10000"
         stringX = "constraint "
         stringCola = "<= " + str(self.numUnidades) + ";"
         
         for i in range(len(self.listaDeRegiones)):
-            stringX =  stringX + str(self.listaDeRegiones[i].get_unidadesReque())+ "*" + self.listaDeRegiones[i].get_nombreCorto()  +  / + divisor + " "
+            stringX =  stringX + str(self.listaDeRegiones[i].get_unidadesReque())+ "*" + self.listaDeRegiones[i].get_nombreCorto() + "/" + divisor + " "
 
             if (i != (len(self.listaDeRegiones)-1)):
                 stringX = stringX + "+ "
@@ -69,12 +68,12 @@ class MinizincMy:
 
     def costosAdecuacion(self):
         divisor = 1000000
-        divisor2 = 50000
+        divisor2 = "50000"
         stringX = "constraint "
         stringCola = "<= " + str(self.presupuesto/divisor) + ";"
         
         for i in range(len(self.listaDeRegiones)):
-            stringX =  stringX + str(self.listaDeRegiones[i].get_costos()/divisor)+ "*" + self.listaDeRegiones[i].get_nombreCorto()  + / + divisor2 + " "
+            stringX =  stringX + str(self.listaDeRegiones[i].get_costos()/divisor)+ "*" + self.listaDeRegiones[i].get_nombreCorto() + "/" + divisor2 + " "
 
             if (i != (len(self.listaDeRegiones)-1)):
                 stringX = stringX + "+ "
@@ -99,7 +98,7 @@ class MinizincMy:
         self.stringFinal = self.stringFinal + stringX + "\n"
         # print(stringX)
         
-    def secuenciaMayorOIgual(self):
+    """ def secuenciaMayorOIgual(self):
         stringX = "\n"
         base = "constraint "
         
@@ -114,8 +113,21 @@ class MinizincMy:
         
             stringX = stringX + base + self.listaDeRegiones[i].get_nombreCorto() + operador + self.listaDeRegiones[i+1].get_nombreCorto() + ";\n" 
         
-        self.stringFinal = self.stringFinal + stringX + "\n"
+        self.stringFinal = self.stringFinal + stringX + "\n" """
         # print(stringX)
+        
+    def poblacion(self):
+        stringX = "constraint "
+        base = " >= "
+        
+        for i in range(len(self.listaDeRegiones)):
+            stringX = stringX + str(self.listaDeRegiones[i].get_EscalaValoracion()) + "*" + self.listaDeRegiones[i].get_nombreCorto() + base + str(self.listaDeRegiones[i].get_poblacion) + ";\n"
+            
+            if (i != (len(self.listaDeRegiones)-1)):
+                stringX = stringX + " + "
+
+       
+        self.stringFinal = self.stringFinal + stringX + "\n"
         
     def noNegatividad(self):
         stringX = "constraint Beneficio >= 0;\n"
@@ -152,7 +164,7 @@ class MinizincMy:
         if(siCondicionesA):
             self.condicionesAdicionales() 
         
-        self.secuenciaMayorOIgual()
+        self.poblacion()
         self.noNegatividad()
         self.funcionObjetivo()
         

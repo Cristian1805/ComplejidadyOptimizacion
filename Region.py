@@ -1,9 +1,10 @@
 class Region:
     
-    def __init__(self, nombreCorto, nombre, congeladores, CongeladoresActuales, unidadesReque, costos, muertes):
+    def __init__(self, nombreCorto, nombre, poblacion,congeladores, CongeladoresActuales, unidadesReque, costos, muertes):
         
         self.nombreCorto = nombreCorto
         self.nombre = nombre
+        self.poblacion = (poblacion*100000)
         self.congeladores = congeladores
         self.CongeladoresActuales = CongeladoresActuales
         self.unidadesReque = unidadesReque
@@ -23,6 +24,9 @@ class Region:
     
     def get_nombreCorto(self):
         return self.nombreCorto
+
+    def get_poblacion(self):
+        return self.poblacion
     
     def get_congeladores(self): 
         return self.congeladores
@@ -54,17 +58,15 @@ class Region:
     def set_EscalaValoracion(self, escalaValoracion):
         self.escalaValoracion = escalaValoracion
 
-    def get_MuertePorMillon(self):
-        return self.muertePorMillon
 
     def printRegion(self):
         print(self.nombre, end=" - ")
         print(self.nombreCorto, end=" - ")
+        print(self.poblacion, end=" - ")
         print(self.congeladores, end=" - ")
         print(self.CongeladoresActuales, end=" - ")
         print(self.unidadesReque, end=" - ")
         print(self.costos, end=" - ")
         print(self.muertes, end=" - ")
         print(self.proporcion, end=" - ")
-        print(self.muertePorMillon, end=" - ")
         print(self.escalaValoracion)

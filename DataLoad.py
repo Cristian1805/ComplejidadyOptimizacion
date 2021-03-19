@@ -54,11 +54,11 @@ class DataLoad:
                 titlesX = False
                 # print(self.titulos)
             else:
-                regionX = rg.Region(self.editarNombre(row[0].value), row[0].value, row[2].value , self.congeladorestotal(), row[3].value, row[4].value, row[5].value)
+                regionX = rg.Region(self.editarNombre(row[0].value), row[0].value,row[1].value ,row[2].value , self.congeladorestotal(), row[3].value, row[4].value, row[5].value)
                 self.listaRegiones.append(regionX)
                 print(self.listaRegiones )
 
-        self.titulos.append("Proporcion\n(Estaciones/Poblacion)")
+        self.titulos.append("Proporcion\n(Congeladores/Total Congeladores)")
         self.titulos.append("Escala de valoración\ndel beneficio")
         
         self.calcularEscalaValoracion()
