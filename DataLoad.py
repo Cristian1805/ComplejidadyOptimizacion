@@ -137,48 +137,77 @@ class DataLoad:
     
     def calcularEscalaValoracion(self):
         listaProporciones = []
+        listaNombresCortos = []
+
+        for regionX in self.listaRegiones:
+            listaNombresCortos.append(regionX.get_nombreCorto())
+        
+
         for regionX in self.listaRegiones:
             listaProporciones.append(regionX.get_proporcion())
         
-        print(listaProporciones)
-        listaProporciones.sort()
-        print(listaProporciones)  
-        
-        
+        orden = []
+        orden = sorted(listaProporciones)
+
+        print(orden)  
+        print("//////////////")
+                
         listaEscalaValoracion = []
-        
+        contador=1
+        for a in range(len(listaProporciones)):
+
+            listaEscalaValoracion.append(contador)
+            contador=contador+1
+
         # opcion 1 tiene en cuenta el valor maximo de escala
-        index = len(listaProporciones)
-        k = index
-        for i in range(len(listaProporciones)):
-            if ( i<len(listaProporciones)-1 and listaProporciones[i] != listaProporciones[i+1]):
-                index = k
-                listaEscalaValoracion.append(index)
-                index = index - 1 
-                k =  k -1 
-            else:
-                listaEscalaValoracion.append(index)
-                k = k - 1
+        #index = len(listaProporciones)
+        #k = index
+        #for i in range(len(listaProporciones)):
+        #    if ( i<len(listaProporciones)-1 and listaProporciones[i] != listaProporciones[i+1]):
+        #        index = k
+        #        listaEscalaValoracion.append(index)
+        #        index = index - 1 
+        #        k =  k -1 
+        #    else:
+        #        listaEscalaValoracion.append(index)
+        #        k = k - 1
+
+        
+        for  i in range(len(listaProporciones)):
+            if (i<len(listaProporciones)-1 and listaProporciones[i]>listaProporciones[i+1]):
+                valor=listaProporciones[i]
+                valor2=listaProporciones[i+1]
+                nombres=listaNombresCortos[i]
+                nombres2=listaNombresCortos[i+1]
+                listaProporciones.insert(i,valor2)
+                listaProporciones.insert(i+1,valor)
+                listaNombresCortos.insert(i,nombres2)
+                listaNombresCortos.insert(i+1,nombres)
+            if (i<len(listaProporciones)-1 and listaProporciones[i]==listaProporciones[i+1]):
+                if(i<len(listaProporciones)-1 and self.listaRegiones[i].get_muertes() > self.listaRegiones[i+1].get_muertes()):
+                    valor=listaProporciones[i]
+                    valor2=listaProporciones[i+1]
+                    nombres=listaNombresCortos[i]
+                    nombres2=listaNombresCortos[i+1]
+                    listaProporciones.insert(i,valor2)
+                    listaProporciones.insert(i+1,valor)
+                    listaNombresCortos.insert(i,nombres2)
+                    listaNombresCortos.insert(i+1,nombres)
             
-        # opcion 2 tiene en cuenta el valor minimo de escala
+            contador=contador+1   
+            print("Contador")
+            print(contador)
 
-        # quitar proporciones iguales
-        # listaProporciones = list(dict.fromkeys(listaProporciones)) 
+            print("Nombre Cortos")
+            print(listaNombresCortos)
+            print("Proporciones")
+            print(listaProporciones)
 
-        # index = len(listaProporciones)
-        # for item in listaProporciones:
-        #     listaEscalaValoracion.append(index)
-        #     index = index - 1
-        
-        print(listaProporciones)
-        print(listaEscalaValoracion)
-        
-      
-        for i in range(len(listaProporciones)):
+        for i in range(len(listaNombresCortos)):
             for j in range(len(self.listaRegiones)):                
-                if (listaProporciones[i] == self.listaRegiones[j].get_proporcion()):
+                if (listaNombresCortos[i] == self.listaRegiones[j].get_nombreCorto()):
                     print("iguales")
-                    print(listaProporciones[i])
+                    print(listaNombresCortos[i])
                     print(self.listaRegiones[j].get_proporcion())
                     print(listaEscalaValoracion[i])
                     
