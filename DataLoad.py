@@ -135,12 +135,13 @@ class DataLoad:
     def getTitulos(self):
         return self.titulos
     
+   
+    
     def calcularEscalaValoracion(self):
         listaProporciones = []
         listaNombresCortos = []
 
-        for regionX in self.listaRegiones:
-            listaNombresCortos.append(regionX.get_nombreCorto())
+
         
 
         for regionX in self.listaRegiones:
@@ -172,36 +173,27 @@ class DataLoad:
         #        listaEscalaValoracion.append(index)
         #        k = k - 1
 
-        
+        bandera2 = False
         for  i in range(len(listaProporciones)):
-            if (i<len(listaProporciones)-1 and listaProporciones[i]>listaProporciones[i+1]):
-                valor=listaProporciones[i]
-                valor2=listaProporciones[i+1]
-                nombres=listaNombresCortos[i]
-                nombres2=listaNombresCortos[i+1]
-                listaProporciones.insert(i,valor2)
-                listaProporciones.insert(i+1,valor)
-                listaNombresCortos.insert(i,nombres2)
-                listaNombresCortos.insert(i+1,nombres)
-            if (i<len(listaProporciones)-1 and listaProporciones[i]==listaProporciones[i+1]):
-                if(i<len(listaProporciones)-1 and self.listaRegiones[i].get_muertes() > self.listaRegiones[i+1].get_muertes()):
-                    valor=listaProporciones[i]
-                    valor2=listaProporciones[i+1]
-                    nombres=listaNombresCortos[i]
-                    nombres2=listaNombresCortos[i+1]
-                    listaProporciones.insert(i,valor2)
-                    listaProporciones.insert(i+1,valor)
-                    listaNombresCortos.insert(i,nombres2)
-                    listaNombresCortos.insert(i+1,nombres)
-            
-            contador=contador+1   
-            print("Contador")
-            print(contador)
+            bandera2 = False
+            for s in range(len(self.listaRegiones)):
+                numero1 = float(self.listaRegiones[i].get_proporcion())
+                numero2 = float(orden[s])
+                if (numero1 == numero2 and bandera2 != True): 
+                    print("Proporciones ",self.listaRegiones[i].get_nombreCorto())
+                    print("Cantidad Proporcion ",self.listaRegiones[i].get_proporcion())
+                    print("Indice ", s)
+                    nombre = self.listaRegiones[i].get_nombreCorto()
+                    listaNombresCortos.insert(s,nombre)
+                    bandera2 = True
+                
+                
 
-            print("Nombre Cortos")
-            print(listaNombresCortos)
-            print("Proporciones")
-            print(listaProporciones)
+
+        print("Nombre Cortos")
+        print(listaNombresCortos)
+        print("Proporciones")
+        print(orden) 
 
         for i in range(len(listaNombresCortos)):
             for j in range(len(self.listaRegiones)):                
