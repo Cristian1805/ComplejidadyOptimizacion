@@ -1,123 +1,296 @@
-from tkinter import Tk,Label,Place,Button,Entry,CENTER,Scrollbar,END
-from tkinter import ttk
+# -*- coding: utf-8 -*-
 
-class
-raiz=Tk()
-raiz.title("Implementacion")
+# Form implementation generated from reading ui file 'C:\Users\Mateo\proyectoComplejidad\interfaz.ui'
+#
+# Created by: PyQt5 UI code generator 5.9.2
+#
+# WARNING! All changes made in this file will be lost!
 
-Label(raiz,text="Ingrese Numero de Filas",font=('Arial',12),fg="blue").place(x=30,y=30)
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtGui import QPixmap
+import DataLoad as ld
+import Region as rg
+import MinizincMy as mz
 
-entra_numeroFilas=Entry(raiz)
-entra_numeroFilas.place(x=30,y=80)
 
-Label(raiz,text="Ingrese Datos",font=("Arial",12),fg="blue").place(x=30,y=120)
-
-Label(raiz,text="Region").place(x=40,y=190)
-entra_region=Entry(raiz)
-entra_region.focus()
-entra_region.place(x=40,y=170)
-
-Label(raiz,text="Poblacion").place(x=200,y=190)
-entra_poblacion=Entry(raiz)
-entra_poblacion.place(x=200,y=170)
-
-Label(raiz,text="Congeladores Disponibles").place(x=360,y=190) 
-entra_congeladora=Entry(raiz)
-entra_congeladora.place(x=360,y=170)
-
-Label(raiz,text="Unidades de Vacunas").place(x=40,y=250)
-entra_vacunas=Entry(raiz)
-entra_vacunas.place(x=40,y=230)
-
-Label(raiz,text="Costo Adecuacion").place(x=200,y=250)
-entra_costo=Entry(raiz)
-entra_costo.place(x=200,y=230)
-
-Label(raiz,text="Muertes").place(x=360,y=250)
-entra_muertes=Entry(raiz)
-entra_muertes.place(x=360,y=230)
-
-####################BOTON AGREGAR#################
-
-btn_agregar=Button(raiz,text="AGREGAR",width=17,command=lambda:agregar())
-btn_agregar.place(x=40,y=300)
-
-####################TABLA RESULTADOS ############
-
-Label(raiz,text="RESULTADOS",font=("Arial",12)).place(x=40,y=350)
-
-tabla_resultados=ttk.Treeview(raiz,columns=[f"#{n}" for n in range(0,2)])
-tabla_resultados.place(x=40,y=380)
-
-tabla_resultados.column("#0",width=0,minwidth=1)
-tabla_resultados.column("#1",width=150,minwidth=100,anchor=CENTER)
-tabla_resultados.column("#2",width=150,minwidth=100,anchor=CENTER)
-
-tabla_resultados.heading("#0",text="")
-tabla_resultados.heading("#1",text="REGION")
-tabla_resultados.heading("#2",text="NUMEROS DE VACUNAS")
-
-######################### TABLA MUESTRA DATOS INGRESADOS ####################
-
-Label(raiz,text="DATOS INGRESADOS",font=("Arial",14),fg="blue").place(x=700,y=100)
-
-tabla_datos=ttk.Treeview(raiz,columns=[f"#{n}" for n in range(0,6)])
-tabla_datos.place(x=600,y=170)
-
-tabla_datos.column("#0",width=0,minwidth=1)
-tabla_datos.column("#1",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#2",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#3",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#4",width=70,minwidth=100,anchor=CENTER)
-tabla_datos.column("#5",width=100,minwidth=100,anchor=CENTER)
-tabla_datos.column("#6",width=250,minwidth=140,anchor=CENTER)
-
-tabla_datos.heading("#0", text="")
-tabla_datos.heading("#1", text="Region")
-tabla_datos.heading("#2", text="Poblacion")
-tabla_datos.heading("#3", text="Congeladores")
-tabla_datos.heading("#4", text="Unidad Vacunas")
-tabla_datos.heading("#5", text="Costos")
-tabla_datos.heading("#6", text="Muertes")
-
-################SCROLLBAR###################
-scroll_Tabladatos=ttk.Scrollbar(raiz,orient="vertical",command=tabla_datos.yview)
-scroll_Tabladatos.place(x=1232,y=170,height=225)
-tabla_datos.configure(yscrollcommand=scroll_Tabladatos.set)
-
-#################BOTONES CALCULAR EDITAR ELIMINAR##############
-
-btn_calcular=Button(raiz,text="CALCULAR",width=17)
-btn_calcular.place(x=650,y=430)
-
-btn_calcular=Button(raiz,text="EDITAR",width=17)
-btn_calcular.place(x=800,y=430)
-
-btn_calcular=Button(raiz,text="ELIMINAR",width=17)
-btn_calcular.place(x=950,y=430)
-
-###############BOTON AGREGAR ##############
-def agregar():
-    x=[(entra_region.get().upper()),(entra_poblacion.get()),(entra_congeladora.get()),(entra_vacunas.get()),(entra_costo.get()),(entra_muertes.get())]
+class Ui_MainWindow(object):
     
-    tabla_datos.insert("",0,values=x)
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(1200, 570)
+        MainWindow.setWindowIcon(QtGui.QIcon('ICOn.png'))
+        MainWindow.setStyleSheet("color: green;"
+                        "background-image: url(Plague-inc.jpg);"
+                        "background-attachment: fixed;"
+                        "selection-background-color: blue;"
+                         "text-align: center;")
         
-    entra_congeladora.delete(0,END)
-    entra_costo.delete(0,END)
-    entra_muertes.delete(0,END)
-    entra_region.delete(0,END)
-    entra_poblacion.delete(0,END)
-    entra_vacunas.delete(0,END)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)  
+        self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setStyleSheet( "text-align: center;")
+        
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(30, 20, 101, 23))
+        self.pushButton.setStyleSheet("color:white")
+
+        self.pushButton.setObjectName("pushButton")
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(10, 520, 221, 23))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.setStyleSheet("color:white")
+
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setGeometry(QtCore.QRect(20, 470, 131, 23))
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton_3.setStyleSheet("color:white")
+
+        self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget.setGeometry(QtCore.QRect(100, 60, 800, 321))
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.tableWidget.setStyleSheet("background:white;")
+
+
+        self.QFileDialog = QtWidgets.QFileDialog()
+        
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(20, 400, 21, 21))
+        self.label.setObjectName("label")        
+        self.label.setStyleSheet("color:white")
+       
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(220, 400, 51, 21))
+        self.label_2.setObjectName("label_2")
+        self.label_2.setStyleSheet("color:white")
+
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(410, 400, 71, 21))
+        self.label_3.setObjectName("label_3")       
+        self.label_3.setStyleSheet("color:white")
+
+        self.label_4 = QtWidgets.QLabel(self.centralwidget)
+        self.label_4.setGeometry(QtCore.QRect(220, 470, 71, 27))
+        self.label_4.setObjectName("label_4")
+        self.label_4.setStyleSheet("color:white")
+
+        self.label_5 = QtWidgets.QLabel(self.centralwidget)
+        self.label_5.setGeometry(QtCore.QRect(290, 510, 50, 31))
+        self.label_5.setObjectName("label_5")
+        self.label_5.setStyleSheet("color:white")
+                
+        self.lineEditkits = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditkits.setGeometry(QtCore.QRect(90, 400, 113, 20))
+        self.lineEditkits.setObjectName("lineEdit")
+        self.lineEditkits.setEnabled(False)
+        self.lineEditkits.setStyleSheet("color:white;")
+
+        self.lineEditUnidades = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditUnidades.setGeometry(QtCore.QRect(270, 400, 113, 20))
+        self.lineEditUnidades.setObjectName("lineEdit_2")
+        self.lineEditUnidades.setEnabled(False)
+        self.lineEditUnidades.setStyleSheet("color:white;")
+
+
+        self.lineEditPresupuesto = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditPresupuesto.setGeometry(QtCore.QRect(500, 400, 121, 21))
+        self.lineEditPresupuesto.setObjectName("lineEdit_3")
+        self.lineEditPresupuesto.setEnabled(False)
+        self.lineEditPresupuesto.setStyleSheet("color:white;")
+
+
+        self.lineEditCualificacion = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditCualificacion.setGeometry(QtCore.QRect(290, 470, 121, 21))
+        self.lineEditCualificacion.setObjectName("lineEdit_4")
+        self.lineEditCualificacion.setEnabled(False)
+        self.lineEditCualificacion.setStyleSheet("color:white;")
+
+
+        self.radioButton = QtWidgets.QRadioButton(self.centralwidget)
+        self.radioButton.setGeometry(QtCore.QRect(20, 440, 141, 17))
+        self.radioButton.setObjectName("radioButton")
+        
+            
+        MainWindow.setCentralWidget(self.centralwidget)
+        
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 200, 21))
+        self.menubar.setObjectName("menubar")
+        
+        MainWindow.setMenuBar(self.menubar)
+        
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
+        self.listaDeRegiones = []
+        self.listaNombreRegionCA = [] 
+        self.listaCualificacionCA = [] 
+        self.siCondicionesA = False
+        
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "Covid APP"))
+           
+        self.pushButton.setText(_translate("MainWindow", "Cargar Archivo"))
+        self.pushButton.clicked.connect(self.cargarArchivo)
+        
+        self.label.setText(_translate("MainWindow", "Kits"))
+        self.label_2.setText(_translate("MainWindow", "Unidades"))
+        self.label_3.setText(_translate("MainWindow", "Presupuesto"))        
+        self.label_4.setText(_translate("MainWindow", "Cualificacion"))
+        self.label_5.setText(_translate("MainWindow", "Solucion"))
+        
+        self.radioButton.setText(_translate("MainWindow", "Condiciones adicionales"))
+        self.radioButton.clicked.connect(self.radioButtonAction)
+        self.radioButton.setEnabled(False)
+        
+        self.pushButton_3.setText(_translate("MainWindow", "Cargar Archivo C.A"))        
+        self.pushButton_3.clicked.connect(self.cargarCondicionesA)
+        self.pushButton_3.setEnabled(False)
+        
+        self.pushButton_2.setText(_translate("MainWindow", "Calcular Distribucion de Vacunas"))        
+        self.pushButton_2.clicked.connect(self.calcularDistribucionV)
+        self.pushButton_2.setEnabled(False) 
+       
+    def verDialogo(self, resultadoFinal):
+        dialogo = QMessageBox()
+        dialogo.setStyleSheet("color: white;"
+                        "background-image: url(Plague-inc.jpg);"
+                        "background-attachment: fixed;" "text-align: center;")
+        dialogo.setWindowTitle("Resultados del Analisis")
+        dialogo.setText(resultadoFinal)
+        x =  dialogo.exec_()
+        
     
+    def cargarArchivo(self):       
+        
+        fname = self.QFileDialog.getOpenFileName(None, 'Open file',  "*.xlsx" )
+            
+        if (fname[0]!=""):
+            # self.pushButton.setText("Button is clicked")
+            ruta = str(fname[0])
+                
+            load = ld.DataLoad(ruta)
+            listaDeRegiones = load.getRegiones()
+            listaDeTitulos = load.getTitulos()
+            
+            # poblacion de la tabla en interfaz
+            self.tableWidget.setColumnCount(len(listaDeTitulos))
+            self.tableWidget.setRowCount(len(listaDeRegiones))
+            
+            # cargando header en tabla
+            self.tableWidget.setHorizontalHeaderLabels(listaDeTitulos)
+            
+            # cargando datos a tabla
+            listaDeRegiones = sorted(listaDeRegiones, key = lambda region: region.get_EscalaValoracion(), reverse=True)
 
-################BOTON SALIR####################
+            row = 0
+            for regionX in listaDeRegiones:
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_nombre()))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(row, 0,  item)
+                
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_poblacion()))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(row, 1,  item)
+                
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_congeladores()))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(row, 2,  item)
+                
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_unidadesReque()))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(row, 3,  item)
+                
+                item =  QtWidgets.QTableWidgetItem(str(regionX.get_costos()))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(row, 4, item)
+                
+                item = QtWidgets.QTableWidgetItem(str(regionX.get_muertes()))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.tableWidget.setItem(row, 5,  item)
+       
+                row = row + 1               
+            
+            self.listaDeRegiones = listaDeRegiones
+            self.pushButton_2.setEnabled(True)
+            self.radioButton.setEnabled(True)
+            self.lineEditkits.setEnabled(True)
+            self.lineEditUnidades.setEnabled(True)
+            self.lineEditPresupuesto.setEnabled(True)    
+            
+        else:
+            print("no load file")
 
-btn_calcular=Button(raiz,text="SALIR",width=17,command=lambda:salir())
-btn_calcular.place(x=1100,y=430)
+    def cargarCondicionesA(self):        
+        fname = self.QFileDialog.getOpenFileName(None, 'Open file',  "*.xlsx" )
+            
+        if (fname[0]!=""):
+            # self.pushButton.setText("Button is clicked")
+            ruta = str(fname[0])
+        
+            load = ld.DataLoad(ruta)
+            load.crearCondicionesA()
+            self.listaNombreRegionCA = load.getNombreRegionesCA()
+            self.listaCualificacionCA = load.getCualificaionCA()
+            #  colocar el bolean de que si cargo C.A
+            self.siCondicionesA = True
+        else:
+            self.siCondicionesA = False
 
-def salir():
-    raiz.destroy()
+    def calcularDistribucionV(self): 
+        bandera = True
+        if (self.lineEditkits.text() == ""):
+            self.lineEditkits.setStyleSheet("border: 1px solid red;")
+            bandera = False
+ 
+        if (self.lineEditUnidades.text() == ""):
+            self.lineEditUnidades.setStyleSheet("border: 1px solid red;")
+            bandera = False
+            
+        if (self.lineEditPresupuesto.text() == ""):
+            self.lineEditPresupuesto.setStyleSheet("border: 1px solid red;")
+            bandera = False
+        
+        if (bandera):
+            kitsX = self.lineEditkits.text()
+            presupuestoX = self.lineEditPresupuesto.text()
+            unidadesX = self.lineEditUnidades.text()
+            cualificacionX = self.lineEditCualificacion.text()  
+                      
+            self.label_5.setText("Calculando...")
+            minizinc = mz.MinizincMy(self.listaDeRegiones,unidadesX, presupuestoX,kitsX, self.listaNombreRegionCA, self.listaCualificacionCA, cualificacionX)
+            minizinc.calcular(self.siCondicionesA)
+            resultadoFinal = minizinc.getResultado()
+            self.verDialogo(resultadoFinal)
+            self.label_5.setText(resultadoFinal)
+                        
+            self.lineEditkits.setStyleSheet("border: 1px solid black;")
+            self.lineEditUnidades.setStyleSheet("border: 1px solid black;")
+            self.lineEditPresupuesto.setStyleSheet("border: 1px solid black;")
+  
+        else:
+            self.label_5.setText("introduce valores de Kits, Personal, Presupuesto")
+        
+    def radioButtonAction(self):
+        self.pushButton_3.setEnabled(self.radioButton.isChecked())
+        self.lineEditCualificacion.setEnabled(self.radioButton.isChecked())
+        self.siCondicionesA = self.radioButton.isChecked()
+                    
+        
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
 
-
-raiz.state(newstate="zoomed")
-raiz.mainloop()

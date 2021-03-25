@@ -19,13 +19,15 @@ class DataLoad:
         
     def load(self):
         wb = op.load_workbook(self.ruta, data_only = True)
-        self.hoja = wb.active 
-         
+        self.hoja = wb.active  
+
         print("")
         titles  = []
         rowData = []
         cont = 1
+
         table = PrettyTable()
+        
         for row in self.hoja.rows:
             for item in row:
                 if (cont == 1):
@@ -58,8 +60,8 @@ class DataLoad:
                 self.listaRegiones.append(regionX)
                 print(self.listaRegiones )
 
-        self.titulos.append("Proporcion\n(Congeladores/Total Congeladores)")
-        self.titulos.append("Escala de valoración\ndel beneficio")
+        #self.titulos.append("Proporcion\n(Congeladores/Total Congeladores)")
+        #self.titulos.append("Escala de valoración\ndel beneficio")
         
         self.calcularEscalaValoracion()
         
@@ -188,8 +190,6 @@ class DataLoad:
                     bandera2 = True
                 
                 
-
-
         print("Nombre Cortos")
         print(listaNombresCortos)
         print("Proporciones")
